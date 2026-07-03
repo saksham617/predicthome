@@ -78,14 +78,25 @@ with tab1:
             ['Resale', 'New Property']
         )
         # Auto-fill rate per sqft based on zone
-        default_rate = area_stats.get(area, 8000)
-        rate_per_sqft = st.number_input(
-            "💰 Rate per sqft (₹)",
-            min_value=1000,
-            max_value=100000,
-            value=int(default_rate),
-            step=500
+        default_rate = int(area_stats.get(area, 8000))
+        use_custom_rate = st.checkbox(
+            "📝 I know the exact rate per sqft"
         )
+        if use_custom_rate:
+            rate_per_sqft = st.number_input(
+                "💰 Rate per sqft (₹)",
+                min_value=1000,
+                max_value=100000,
+                value=default_rate,
+                step=500
+            )
+        else:
+            rate_per_sqft = default_rate
+            st.info(
+                f"💡 Using zone median: ₹{default_rate:,}/sqft "
+                f"(based on {area} market data)"
+            )
+        
 
     if st.button("🔮 Predict Price", type="primary"):
 
